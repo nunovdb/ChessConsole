@@ -23,10 +23,42 @@ namespace ChessConsole.Board
             
         }
 
+        public Piece Piece(Position position)
+        {
+            return Pieces[position.Line, position.Column];
+        }
+
+        public bool ExistPiece(Position position) 
+        {
+            ValidatePosition(position);
+            return Piece(position) != null;
+        }
+
         public void PutPiece(Piece piece, Position position) 
         {
+            if (ExistPiece(position)) 
+            {
+                throw new BoardException("there is already a piece in that position");
+            }
             Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
+        }
+
+        public bool ValidPosition(Position position) 
+        {
+            if (position.Line < 0 || position.Line >= Lines || position.Column < 0 || position.Column >= Columns) 
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void ValidatePosition(Position position) 
+        {
+            if (!ValidPosition(position)) 
+            {
+                throw new BoardException("Invalid Position");
+            }
         }
     }
 }
