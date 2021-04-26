@@ -9,9 +9,9 @@ namespace ChessConsole.Board
         public Position Position { get; set; }
         public Color Color { get; protected set; }
         public int NumMoves { get; set; }
-        public Board Board { get; set; }
+        public BoardGame Board { get; set; }
 
-        public Piece(Position position, Color color, int numMoves, Board board)
+        public Piece(Position position, Color color, int numMoves, BoardGame board)
         {
             Position = position;
             Color = color;

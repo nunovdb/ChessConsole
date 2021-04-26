@@ -8,7 +8,10 @@ namespace ChessConsole
         static void Main(string[] args)
         {
 
-             BoardGame boardGame = new Board.BoardGame(8,8);
+            BoardGame boardGame = new Board.BoardGame(8,8);
+
+            Screen.PrintBoardGame(boardGame);
+            
 
             Console.ReadLine();
         }
