@@ -11,12 +11,13 @@ namespace ChessConsole.Board
         public int NumMoves { get; set; }
         public BoardGame Board { get; set; }
 
-        public Piece(Position position, Color color, int numMoves, BoardGame board)
+        public Piece(BoardGame board, Color color)
         {
-            Position = position;
+            Position = null;
             Color = color;
+            NumMoves = 0; // the Piece has not yet been moved
             Board = board;
-            NumMoves = 0; // the Piece has not yet been moved 
+ 
         }
     }
 }
