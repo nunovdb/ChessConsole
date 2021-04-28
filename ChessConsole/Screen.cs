@@ -18,7 +18,7 @@ namespace ChessConsole
                     }
                     else
                     {
-                        Screen.PrintPiece(boardGame.Piece(i, j));   
+                        PrintPiece(boardGame.Piece(i, j));   
                     }                    
                 }
                 Console.WriteLine();
