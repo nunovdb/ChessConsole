@@ -10,13 +10,20 @@ namespace ChessConsole
         {
             try
             {
-                BoardGame boardGame = new BoardGame(8, 8);
+                ChessGame chessGame = new ChessGame();
 
-                boardGame.PutPiece(new Tower(boardGame, Color.Black), new Position(0, 0));
-                boardGame.PutPiece(new Tower(boardGame, Color.Black), new Position(1, 3));
-                boardGame.PutPiece(new King(boardGame, Color.White), new Position(0, 2));
+                while (!chessGame.Terminada) 
+                {
+                    Console.Clear();
+                    Screen.PrintBoardGame(chessGame.boardGame);
 
-                Screen.PrintBoardGame(boardGame);
+                    Console.Write("Origin: ");
+                    Position origin = Screen.ReadChessPosition().ToPosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.ReadChessPosition().ToPosition();
+                    chessGame.ExecuteMovement(origin, destiny);
+                }
+                
             }
             catch (BoardException e) 
             {

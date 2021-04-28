@@ -17,7 +17,11 @@ namespace ChessConsole.Board
             Color = color;
             NumMoves = 0; // the Piece has not yet been moved
             Board = board;
- 
+        }
+
+        public void IncreaseNumMoves() 
+        {
+            NumMoves++;
         }
     }
 }
