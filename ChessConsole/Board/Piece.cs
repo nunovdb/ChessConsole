@@ -24,6 +24,27 @@ namespace ChessConsole.Board
             NumMoves++;
         }
 
+        public bool ExistPossibleMoves() 
+        {
+            bool[,] mat = PossibleMoves();
+            for (int i = 0; i < BoardGame.Lines; i++)
+            {
+                for (int j = 0; j < BoardGame.Columns; j++)
+                {
+                    if (mat[i, j]) 
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool CanMoveTo(Position position) 
+        {
+            return PossibleMoves()[position.Line, position.Column];
+        }
+
         public abstract bool[,] PossibleMoves(); 
     }
 }

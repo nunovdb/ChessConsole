@@ -8,8 +8,8 @@ namespace ChessConsole.Chess
     class ChessGame
     {
         public BoardGame boardGame { get; private set; }
-        private int turn;
-        private Color actualPlayer;
+        public int turn { get; private set; }
+        public Color actualPlayer { get; private set; }
         public bool Terminada { get; private set; }
 
         public ChessGame() 
@@ -26,6 +26,52 @@ namespace ChessConsole.Chess
             piece.IncreaseNumMoves();
             Piece capturedPiece = boardGame.RemovePiece(destiny);
             boardGame.PutPiece(piece, destiny);
+        }
+
+        public void MakeMove(Position origin, Position destiny) 
+        {
+            ExecuteMovement(origin, destiny);
+            turn++;
+            ChangePlayer();
+            
+        }
+
+        public void ValidatePositionOrigin(Position origin) 
+        {
+            if (boardGame.Piece(origin) == null) 
+            {
+                throw new BoardException("There are no pieces in the chosen position!");
+            }
+            if (actualPlayer != boardGame.Piece(origin).Color) 
+            {
+                throw new BoardException("The piece in the chosen position is not yours!");
+            }
+            if (!boardGame.Piece(origin).ExistPossibleMoves()) 
+            {
+                throw new BoardException("There are no possible movements for the chosen piece!");
+            }
+
+        }
+        public void ValidatePositionDestiny(Position origin, Position destiny)
+        {
+            if (!boardGame.Piece(origin).CanMoveTo(destiny)) 
+            {
+                throw new BoardException("You cannot move this piece to that destination!");
+            }
+
+        }
+
+        private void ChangePlayer() 
+        {
+            if (actualPlayer == Color.White)
+            {
+                actualPlayer = Color.Black;
+            }
+            else 
+            {
+                actualPlayer = Color.White;
+            }
+
         }
 
         private void PutPieces() 
