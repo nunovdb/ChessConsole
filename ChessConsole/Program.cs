@@ -15,10 +15,7 @@ namespace ChessConsole
                 { try
                     {
                         Console.Clear();
-                        Screen.PrintBoardGame(chessGame.boardGame);
-                        Console.WriteLine();
-                        Console.WriteLine("Turn: " + chessGame.turn);
-                        Console.WriteLine("Waiting for the move: " + chessGame.actualPlayer);
+                        Screen.PrintChessGame(chessGame);
 
                         Console.Write("Origin: ");
                         Position origin = Screen.ReadChessPosition().ToPosition();
