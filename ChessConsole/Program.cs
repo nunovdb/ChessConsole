@@ -11,7 +11,6 @@ namespace ChessConsole
             try
             {
                 ChessGame chessGame = new ChessGame();
-
                 while (!chessGame.Terminada) 
                 {
                     Console.Clear();
@@ -19,11 +18,16 @@ namespace ChessConsole
 
                     Console.Write("Origin: ");
                     Position origin = Screen.ReadChessPosition().ToPosition();
+
+                    bool[,] posiblePositions = chessGame.boardGame.Piece(origin).PossibleMoves();
+                    Console.Clear();
+                    Screen.PrintBoardGame(chessGame.boardGame, posiblePositions);
+                    
+                    Console.WriteLine();
                     Console.Write("Destiny: ");
                     Position destiny = Screen.ReadChessPosition().ToPosition();
                     chessGame.ExecuteMovement(origin, destiny);
-                }
-                
+                }               
             }
             catch (BoardException e) 
             {
