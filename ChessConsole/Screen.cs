@@ -9,15 +9,23 @@ namespace ChessConsole
     {
         public static void PrintChessGame(ChessGame chessGame) 
         {
-            PrintBoardGame(chessGame.boardGame);
+            PrintBoardGame(chessGame.BoardGame);
             Console.WriteLine();
             PrintCapturedPieces(chessGame);
             Console.WriteLine();
-            Console.WriteLine("Turn: " + chessGame.turn);
-            Console.WriteLine("Waiting for the move: " + chessGame.actualPlayer);
-            if (chessGame.Check) 
+            Console.WriteLine("Turn: " + chessGame.Turn);
+            if (!chessGame.Terminated)
             {
-                Console.WriteLine("Check!");
+                Console.WriteLine("Waiting for the move: " + chessGame.ActualPlayer);
+                if (chessGame.Check)
+                {
+                    Console.WriteLine("Check!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Checkmate!!");
+                Console.WriteLine("Winner: " + chessGame.ActualPlayer);
             }
         }
 

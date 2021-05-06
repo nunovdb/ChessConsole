@@ -11,7 +11,7 @@ namespace ChessConsole
             try
             {
                 ChessGame chessGame = new ChessGame();
-                while (!chessGame.Terminada) 
+                while (!chessGame.Terminated) 
                 { try
                     {
                         Console.Clear();
@@ -21,9 +21,9 @@ namespace ChessConsole
                         Position origin = Screen.ReadChessPosition().ToPosition();
                         chessGame.ValidatePositionOrigin(origin);
 
-                        bool[,] posiblePositions = chessGame.boardGame.Piece(origin).PossibleMoves();
+                        bool[,] posiblePositions = chessGame.BoardGame.Piece(origin).PossibleMoves();
                         Console.Clear();
-                        Screen.PrintBoardGame(chessGame.boardGame, posiblePositions);
+                        Screen.PrintBoardGame(chessGame.BoardGame, posiblePositions);
 
                         Console.WriteLine();
                         Console.Write("Destiny: ");
@@ -37,7 +37,10 @@ namespace ChessConsole
                         Console.WriteLine(e.Message);
                         Console.ReadLine();
                     }
-                }               
+                }
+
+                Console.Clear();
+                Screen.PrintChessGame(chessGame);
             }
             catch (BoardException e) 
             {

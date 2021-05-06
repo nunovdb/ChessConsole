@@ -7,10 +7,10 @@ namespace ChessConsole.Chess
 {
     class ChessGame
     {
-        public BoardGame boardGame { get; private set; }
-        public int turn { get; private set; }
-        public Color actualPlayer { get; private set; }
-        public bool Terminada { get; private set; }        
+        public BoardGame BoardGame { get; private set; }
+        public int Turn { get; private set; }
+        public Color ActualPlayer { get; private set; }
+        public bool Terminated { get; private set; }        
         
         private HashSet<Piece> Pieces;        
 
@@ -19,9 +19,9 @@ namespace ChessConsole.Chess
 
         public ChessGame() 
         {
-            boardGame = new BoardGame(8, 8);
-            turn = 1;
-            actualPlayer = Color.White;
+            BoardGame = new BoardGame(8, 8);
+            Turn = 1;
+            ActualPlayer = Color.White;
             Pieces = new HashSet<Piece>();
             Captured = new HashSet<Piece>();
             PutPieces();
@@ -29,10 +29,10 @@ namespace ChessConsole.Chess
 
         public Piece ExecuteMovement(Position origin, Position destiny) 
         {
-            Piece piece = boardGame.RemovePiece(origin);
+            Piece piece = BoardGame.RemovePiece(origin);
             piece.IncreaseNumMoves();
-            Piece capturedPiece = boardGame.RemovePiece(destiny);
-            boardGame.PutPiece(piece, destiny);
+            Piece capturedPiece = BoardGame.RemovePiece(destiny);
+            BoardGame.PutPiece(piece, destiny);
             if (capturedPiece != null) 
             {
                 Captured.Add(capturedPiece);
@@ -43,14 +43,14 @@ namespace ChessConsole.Chess
 
         public void MakeMove(Position origin, Position destiny) 
         {
-
             Piece capturedPiece = ExecuteMovement(origin, destiny);
-            if (IsInCheck(actualPlayer)) 
+
+            if (IsInCheck(ActualPlayer)) 
             {
                 CancelMove(origin, destiny, capturedPiece);
                 throw new BoardException("you cannot put yourself in Check");
             }
-            if (IsInCheck(Opponent(actualPlayer)))
+            if (IsInCheck(Opponent(ActualPlayer)))
             {
                 Check = true;
             }
@@ -59,58 +59,64 @@ namespace ChessConsole.Chess
                 Check = false;
             }
 
-            turn++;
-            ChangePlayer();            
+            if (CheckmateTest(Opponent(ActualPlayer)))
+            {
+                Terminated = true;
+            }
+            else
+            {
+                Turn++;
+                ChangePlayer();
+            }
         }
 
         public void CancelMove(Position origin, Position destiny, Piece capturedPiece) 
         {
-            Piece p = boardGame.RemovePiece(destiny);
+            Piece p = BoardGame.RemovePiece(destiny);
             p.DecreaseNumMoves();
             if (capturedPiece != null) 
             {
-                boardGame.PutPiece(capturedPiece, destiny);
+                BoardGame.PutPiece(capturedPiece, destiny);
                 Captured.Remove(capturedPiece);
             }
-            boardGame.PutPiece(p, origin);
+
+            BoardGame.PutPiece(p, origin);
         }
 
         public void ValidatePositionOrigin(Position origin) 
         {
-            if (boardGame.Piece(origin) == null) 
+            if (BoardGame.Piece(origin) == null) 
             {
                 throw new BoardException("There are no pieces in the chosen position!");
             }
-            if (actualPlayer != boardGame.Piece(origin).Color) 
+            if (ActualPlayer != BoardGame.Piece(origin).Color) 
             {
                 throw new BoardException("The piece in the chosen position is not yours!");
             }
-            if (!boardGame.Piece(origin).ExistPossibleMoves()) 
+            if (!BoardGame.Piece(origin).ExistPossibleMoves()) 
             {
                 throw new BoardException("There are no possible movements for the chosen piece!");
             }
-
         }
+
         public void ValidatePositionDestiny(Position origin, Position destiny)
         {
-            if (!boardGame.Piece(origin).CanMoveTo(destiny)) 
+            if (!BoardGame.Piece(origin).CanMoveTo(destiny)) 
             {
                 throw new BoardException("You cannot move this piece to that destination!");
             }
-
         }
 
         private void ChangePlayer() 
         {
-            if (actualPlayer == Color.White)
+            if (ActualPlayer == Color.White)
             {
-                actualPlayer = Color.Black;
+                ActualPlayer = Color.Black;
             }
             else 
             {
-                actualPlayer = Color.White;
+                ActualPlayer = Color.White;
             }
-
         }
 
         public HashSet<Piece> CapturedPieces(Color color) 
@@ -179,30 +185,64 @@ namespace ChessConsole.Chess
                     return true;
                 }
             }
-            return false;
 
+            return false;
         }
+
+        public bool CheckmateTest(Color color)
+        {
+            if (!IsInCheck(color))
+            {
+                return false;
+            }
+
+            foreach (Piece x in PlayingPieces(color))
+            {
+                bool[,] mat = x.PossibleMoves();
+                for (int i = 1; i< x.BoardGame.Lines; i++)
+                {
+                    for (int j = 0; j< x.BoardGame.Columns; j++)
+                    {
+                        if (mat[i,j])
+                        {
+                            Position origin = x.Position;
+                            Position destiny = new Position(i,j);
+                            Piece capturedPiece = ExecuteMovement(origin, destiny);
+                            bool checkTest = IsInCheck(color);
+                            CancelMove(origin, destiny, capturedPiece);
+                            if (!checkTest)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }    
+            }
+
+            return true;
+        }
+
         public void PutNewPiece(char column, int line, Piece piece) 
         {
-            boardGame.PutPiece(piece, new ChessPosition(column, line).ToPosition());
+            BoardGame.PutPiece(piece, new ChessPosition(column, line).ToPosition());
             Pieces.Add(piece);
         }
 
         private void PutPieces() 
         {
-            PutNewPiece('c', 1, new Tower(boardGame, Color.White));
-            PutNewPiece('c', 2, new Tower(boardGame, Color.White));
-            PutNewPiece('d', 2, new Tower(boardGame, Color.White));
-            PutNewPiece('e', 2, new Tower(boardGame, Color.White));
-            PutNewPiece('e', 1, new Tower(boardGame, Color.White));
-            PutNewPiece('d', 1, new King(boardGame, Color.White));
+            PutNewPiece('c', 1, new Tower(BoardGame, Color.White));
+            PutNewPiece('c', 2, new Tower(BoardGame, Color.White));
+            PutNewPiece('d', 2, new Tower(BoardGame, Color.White));
+            PutNewPiece('e', 2, new Tower(BoardGame, Color.White));
+            PutNewPiece('e', 1, new Tower(BoardGame, Color.White));
+            PutNewPiece('d', 1, new King(BoardGame, Color.White));
 
-            PutNewPiece('c', 7, new Tower(boardGame, Color.Black));
-            PutNewPiece('c', 8, new Tower(boardGame, Color.Black));
-            PutNewPiece('d', 7, new Tower(boardGame, Color.Black));
-            PutNewPiece('e', 7, new Tower(boardGame, Color.Black));
-            PutNewPiece('e', 8, new Tower(boardGame, Color.Black));
-            PutNewPiece('d', 8, new King(boardGame, Color.Black));
+            PutNewPiece('c', 7, new Tower(BoardGame, Color.Black));
+            PutNewPiece('c', 8, new Tower(BoardGame, Color.Black));
+            PutNewPiece('d', 7, new Tower(BoardGame, Color.Black));
+            PutNewPiece('e', 7, new Tower(BoardGame, Color.Black));
+            PutNewPiece('e', 8, new Tower(BoardGame, Color.Black));
+            PutNewPiece('d', 8, new King(BoardGame, Color.Black));
         }
     }
 }
