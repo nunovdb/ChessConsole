@@ -101,7 +101,7 @@ namespace ChessConsole.Chess
 
         public void ValidatePositionDestiny(Position origin, Position destiny)
         {
-            if (!BoardGame.Piece(origin).CanMoveTo(destiny)) 
+            if (!BoardGame.Piece(origin).PossibleMove(destiny)) 
             {
                 throw new BoardException("You cannot move this piece to that destination!");
             }
@@ -230,19 +230,31 @@ namespace ChessConsole.Chess
 
         private void PutPieces() 
         {
+            // Move test
+            //PutNewPiece('c', 1, new Tower(BoardGame, Color.White));
+            //PutNewPiece('c', 2, new Tower(BoardGame, Color.White));
+            //PutNewPiece('d', 2, new Tower(BoardGame, Color.White));
+            //PutNewPiece('e', 2, new Tower(BoardGame, Color.White));
+            //PutNewPiece('e', 1, new Tower(BoardGame, Color.White));
+            //PutNewPiece('d', 1, new King(BoardGame, Color.White));
+
+            //PutNewPiece('c', 7, new Tower(BoardGame, Color.Black));
+            //PutNewPiece('c', 8, new Tower(BoardGame, Color.Black));
+            //PutNewPiece('d', 7, new Tower(BoardGame, Color.Black));
+            //PutNewPiece('e', 7, new Tower(BoardGame, Color.Black));
+            //PutNewPiece('e', 8, new Tower(BoardGame, Color.Black));
+            //PutNewPiece('d', 8, new King(BoardGame, Color.Black));
+
+            // Checkmate test
             PutNewPiece('c', 1, new Tower(BoardGame, Color.White));
-            PutNewPiece('c', 2, new Tower(BoardGame, Color.White));
-            PutNewPiece('d', 2, new Tower(BoardGame, Color.White));
-            PutNewPiece('e', 2, new Tower(BoardGame, Color.White));
-            PutNewPiece('e', 1, new Tower(BoardGame, Color.White));
+            PutNewPiece('h', 7, new Tower(BoardGame, Color.White));
             PutNewPiece('d', 1, new King(BoardGame, Color.White));
 
-            PutNewPiece('c', 7, new Tower(BoardGame, Color.Black));
-            PutNewPiece('c', 8, new Tower(BoardGame, Color.Black));
-            PutNewPiece('d', 7, new Tower(BoardGame, Color.Black));
-            PutNewPiece('e', 7, new Tower(BoardGame, Color.Black));
-            PutNewPiece('e', 8, new Tower(BoardGame, Color.Black));
-            PutNewPiece('d', 8, new King(BoardGame, Color.Black));
+            PutNewPiece('b', 8, new Tower(BoardGame, Color.Black));
+            PutNewPiece('a', 8, new King(BoardGame, Color.Black));
+
         }
+
+
     }
 }
