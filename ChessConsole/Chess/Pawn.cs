@@ -18,7 +18,7 @@ namespace ChessConsole.Chess
         private bool ExistEnemy(Position position)
         {
             Piece piece = BoardGame.Piece(position);
-            return piece == null || piece.Color != Color;
+            return piece != null && piece.Color != Color;
         }
 
         private bool Free(Position position)
